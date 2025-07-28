@@ -10,6 +10,8 @@ from contextlib import asynccontextmanager
 import logging
 import threading
 
+from app.db.base import AbstractAsyncDB
+
 
 # --- 异步最佳实践建议 ---
 # 1. 使用 aiosqlite 库进行异步SQLite操作
@@ -17,23 +19,23 @@ import threading
 # 3. 连接管理通过异步上下文管理器实现
 # ------------------------------------
 
-class AsyncSQLiteDB:
+class AsyncSQLiteDB(AbstractAsyncDB):
     """
     一个用于管理SQLite数据库的异步类，支持高并发异步操作。
     使用 aiosqlite 库提供完全的异步数据库访问。
     """
 
-    def __init__(self, db_path: str = "chat.db"):
+    def __init__(self, db_config: Dict[str, Any]):
         """
         初始化异步SQLite数据库连接。
 
         Args:
-            db_path (str): 数据库文件路径。
+            db_config (Dict[str, Any]): 数据库配置。
         """
-        self.db_path = db_path
+        super().__init__(db_config)
+        self.db_path = db_config.get('db_path', 'chat.db')
         self._connection_lock = asyncio.Lock()
-        self._initialized = False
-        logging.info(f"异步数据库将初始化于 {os.path.abspath(self.db_path)}")
+        self.logger.info(f"异步 SQLite 数据库将初始化于 {os.path.abspath(self.db_path)}")
 
     async def init_database(self):
         """
@@ -267,19 +269,6 @@ class AsyncSQLiteDB:
                 logging.error(f"异步事务失败: {e}")
                 return False
 
-    async def vacuum_database(self):
-        """异步清理数据库，重建并回收未使用的空间。"""
-        async with self.get_connection() as conn:
-            logging.info("开始异步数据库 VACUUM...")
-            await conn.execute('VACUUM')
-            logging.info("异步数据库 VACUUM 完成。")
-
-    async def analyze_database(self):
-        """异步分析数据库，更新统计信息以帮助查询规划器优化查询。"""
-        async with self.get_connection() as conn:
-            logging.info("开始异步数据库 ANALYZE...")
-            await conn.execute('ANALYZE')
-            logging.info("异步数据库 ANALYZE 完成。")
 
     async def get_database_info(self) -> dict:
         """
