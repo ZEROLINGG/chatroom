@@ -1,4 +1,5 @@
-﻿from pydantic import BaseModel
+﻿"""app/models/request_models.py"""
+from pydantic import BaseModel
 
 
 class EncryptedContent(BaseModel):

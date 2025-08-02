@@ -71,36 +71,36 @@ class Eec:
                 return b''
 
     class Aes:
-        # class Cbc:
-        #     @staticmethod
-        #     def encrypt_str(data: str, key: str, encoding: str = 'utf-8') -> str:
-        #         try:
-        #                 # 确保密钥长度为 16, 24 或 32 字节
-        #             if len(key.encode(encoding)) not in (16, 24, 32):
-        #                 raise ValueError("Invalid AES key length.")
-        #             iv = get_random_bytes(16)
-        #             cipher = AES.new(key.encode(encoding), AES.MODE_CBC, iv)
-        #             padded_data = pad(data.encode(encoding), 16)
-        #             encrypted_bytes = cipher.encrypt(padded_data)
-        #             # 将 IV + 加密数据一起编码
-        #             encrypted_data = base64.b64encode(iv + encrypted_bytes).decode(encoding)
-        #             return encrypted_data
-        #         except Exception:
-        #             return ''
-        #     @staticmethod
-        #     def decrypt_str(data: str, key: str, encoding: str = 'utf-8') -> str:
-        #         try:
-        #             # 确保密钥长度为 16, 24 或 32 字节
-        #             if len(key.encode(encoding)) not in (16, 24, 32):
-        #                 raise ValueError("Invalid AES key length.")
-        #             raw_data = base64.b64decode(data.encode(encoding))
-        #             iv = raw_data[:16]
-        #             encrypted_data = raw_data[16:]
-        #             cipher = AES.new(key.encode(encoding), AES.MODE_CBC, iv)
-        #             decrypted_bytes = unpad(cipher.decrypt(encrypted_data), 16)
-        #             return decrypted_bytes.decode(encoding)
-        #         except Exception:
-        #              return ''
+        class Cbc:
+            @staticmethod
+            def encrypt_str(data: str, key: str, encoding: str = 'utf-8') -> str:
+                try:
+                        # 确保密钥长度为 16, 24 或 32 字节
+                    if len(key.encode(encoding)) not in (16, 24, 32):
+                        raise ValueError("Invalid AES key length.")
+                    iv = get_random_bytes(16)
+                    cipher = AES.new(key.encode(encoding), AES.MODE_CBC, iv)
+                    padded_data = pad(data.encode(encoding), 16)
+                    encrypted_bytes = cipher.encrypt(padded_data)
+                    # 将 IV + 加密数据一起编码
+                    encrypted_data = base64.b64encode(iv + encrypted_bytes).decode(encoding)
+                    return encrypted_data
+                except Exception:
+                    return ''
+            @staticmethod
+            def decrypt_str(data: str, key: str, encoding: str = 'utf-8') -> str:
+                try:
+                    # 确保密钥长度为 16, 24 或 32 字节
+                    if len(key.encode(encoding)) not in (16, 24, 32):
+                        raise ValueError("Invalid AES key length.")
+                    raw_data = base64.b64decode(data.encode(encoding))
+                    iv = raw_data[:16]
+                    encrypted_data = raw_data[16:]
+                    cipher = AES.new(key.encode(encoding), AES.MODE_CBC, iv)
+                    decrypted_bytes = unpad(cipher.decrypt(encrypted_data), 16)
+                    return decrypted_bytes.decode(encoding)
+                except Exception:
+                     return ''
 
         class Gcm:
             @staticmethod

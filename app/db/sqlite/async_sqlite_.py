@@ -72,8 +72,8 @@ class AsyncSQLiteDB(AbstractAsyncDB):
                         is_active INTEGER DEFAULT 1,
                         last_login_at INTEGER,
                         created_at INTEGER DEFAULT (strftime('%s', 'now')),
-                        updated_at INTEGER DEFAULT (strftime('%s', 'now')),
-                        FOREIGN KEY (inviter) REFERENCES user(user_uuid) ON DELETE SET NULL
+                        updated_at INTEGER DEFAULT (strftime('%s', 'now'))
+                        -- FOREIGN KEY (inviter) REFERENCES user(user_uuid) ON DELETE SET NULL
                     )
                 ''')
 
@@ -241,7 +241,7 @@ class AsyncSQLiteDB(AbstractAsyncDB):
         except Exception as e:
             if conn:
                 await conn.rollback()
-            logging.error(f"异步数据库操作失败: {e}")
+            print(f"异步数据库操作失败: {e}")
             raise
         finally:
             if conn:
@@ -266,9 +266,8 @@ class AsyncSQLiteDB(AbstractAsyncDB):
                 return True
             except Exception as e:
                 await conn.rollback()
-                logging.error(f"异步事务失败: {e}")
+                print(f"异步事务失败: {e}")
                 return False
-
 
     async def get_database_info(self) -> dict:
         """
@@ -319,7 +318,7 @@ class AsyncSQLiteDB(AbstractAsyncDB):
         try:
             async with self.get_connection() as conn:
                 await conn.execute('''
-                    INSERT INTO user (user_uuid, qq_number, name, avatar_path, role, 
+                    INSERT INTO user (user_uuid, qq_number, name, avatar_path, role,
                                     password_hash, inviter, created_at, updated_at)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ''', (
@@ -337,7 +336,7 @@ class AsyncSQLiteDB(AbstractAsyncDB):
                 logging.info(f"用户创建成功: {user_uuid}")
                 return user_uuid
         except Exception as e:
-            logging.error(f"创建用户失败: {e}")
+            print(f"创建用户失败: {e}")
             return ""
 
     async def get_user_by_uuid(self, user_uuid: str) -> Optional[Dict[str, Any]]:
@@ -359,7 +358,7 @@ class AsyncSQLiteDB(AbstractAsyncDB):
                     row = await cursor.fetchone()
                     return dict(row) if row else None
         except Exception as e:
-            logging.error(f"获取用户失败: {e}")
+            print(f"获取用户失败: {e}")
             return None
 
     async def get_user_by_qq_number(self, qq_number: str) -> Optional[Dict[str, Any]]:
@@ -379,7 +378,7 @@ class AsyncSQLiteDB(AbstractAsyncDB):
                     row = await cursor.fetchone()
                     return dict(row) if row else None
         except Exception as e:
-            logging.error(f"获取用户（通过QQ号）失败: {e}")
+            print(f"获取用户（通过QQ号）失败: {e}")
             return None
 
     async def update_user(self, user_uuid: str, update_data: Dict[str, Any]) -> bool:
@@ -414,7 +413,7 @@ class AsyncSQLiteDB(AbstractAsyncDB):
                 logging.info(f"用户更新成功: {user_uuid}")
                 return True
         except Exception as e:
-            logging.error(f"更新用户失败: {e}")
+            print(f"更新用户失败: {e}")
             return False
 
     async def create_room(self, room_data: Dict[str, Any]) -> str:
@@ -460,7 +459,7 @@ class AsyncSQLiteDB(AbstractAsyncDB):
                 logging.info(f"房间创建成功: {room_uuid}")
                 return room_uuid
         except Exception as e:
-            logging.error(f"创建房间失败: {e}")
+            print(f"创建房间失败: {e}")
             return ""
 
     async def send_message(self, message_data: Dict[str, Any]) -> str:
@@ -497,7 +496,7 @@ class AsyncSQLiteDB(AbstractAsyncDB):
                 logging.info(f"消息发送成功: {msg_uuid}")
                 return msg_uuid
         except Exception as e:
-            logging.error(f"发送消息失败: {e}")
+            print(f"发送消息失败: {e}")
             return ""
 
     async def get_room_messages(self, room_uuid: str, limit: int = 50, offset: int = 0) -> List[Dict[str, Any]]:
@@ -524,7 +523,7 @@ class AsyncSQLiteDB(AbstractAsyncDB):
                 ''', (room_uuid, limit, offset)) as cursor:
                     return [dict(row) async for row in cursor]
         except Exception as e:
-            logging.error(f"获取房间消息失败: {e}")
+            print(f"获取房间消息失败: {e}")
             return []
 
     async def send_private_message(self, message_data: Dict[str, Any]) -> str:
@@ -557,7 +556,7 @@ class AsyncSQLiteDB(AbstractAsyncDB):
                 logging.info(f"私聊消息发送成功: {msg_uuid}")
                 return msg_uuid
         except Exception as e:
-            logging.error(f"发送私聊消息失败: {e}")
+            print(f"发送私聊消息失败: {e}")
             return ""
 
     async def get_private_message_users(self, user_uuid: str) -> List[str]:
@@ -580,10 +579,11 @@ class AsyncSQLiteDB(AbstractAsyncDB):
                     rows = await cursor.fetchall()
                     return [row['user_uuid'] for row in rows]
         except Exception as e:
-            logging.error(f"获取私聊用户列表失败: {e}")
+            print(f"获取私聊用户列表失败: {e}")
             return []
 
-    async def get_private_messages(self, user_uuid1: str, user_uuid2: str, limit: int = 50, offset: int = 0) -> List[Dict[str, Any]]:
+    async def get_private_messages(self, user_uuid1: str, user_uuid2: str, limit: int = 50, offset: int = 0) -> List[
+        Dict[str, Any]]:
         """
         异步获取私聊消息（分页）
         :param user_uuid1: 用户1 UUID
@@ -609,7 +609,7 @@ class AsyncSQLiteDB(AbstractAsyncDB):
                 ''', (user_uuid1, user_uuid2, user_uuid2, user_uuid1, limit, offset)) as cursor:
                     return [dict(row) async for row in cursor]
         except Exception as e:
-            logging.error(f"获取私聊消息失败: {e}")
+            print(f"获取私聊消息失败: {e}")
             return []
 
     async def join_room(self, user_uuid: str, room_uuid: str) -> bool:
@@ -635,7 +635,7 @@ class AsyncSQLiteDB(AbstractAsyncDB):
                 logging.info(f"用户 {user_uuid} 成功加入房间 {room_uuid}")
                 return True
         except Exception as e:
-            logging.error(f"用户加入房间失败: {e}")
+            print(f"用户加入房间失败: {e}")
             return False
 
     async def leave_room(self, user_uuid: str, room_uuid: str) -> bool:
@@ -662,7 +662,5 @@ class AsyncSQLiteDB(AbstractAsyncDB):
                 logging.info(f"用户 {user_uuid} 成功退出房间 {room_uuid}")
                 return True
         except Exception as e:
-            logging.error(f"用户退出房间失败: {e}")
+            print(f"用户退出房间失败: {e}")
             return False
-
-

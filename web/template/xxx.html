@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API 测试页面 - 加密通信</title>
+    <title>加密通信API测试页面</title>
+    <script src="/static/js/tools.js"></script>
     <style>
         * {
             margin: 0;
@@ -23,151 +24,191 @@
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            padding: 30px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
+            overflow: hidden;
         }
 
-        h1 {
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
             text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
-        .section {
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .step-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
             margin-bottom: 30px;
-            padding: 25px;
-            border: 2px solid #e0e0e0;
+        }
+
+        .step-card {
+            background: white;
             border-radius: 15px;
-            background: linear-gradient(145deg, #ffffff, #f5f5f5);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
             transition: all 0.3s ease;
         }
 
-        .section:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        .step-card:hover {
+            transform: translateY(-5px);
+            border-color: #3498db;
+            box-shadow: 0 15px 40px rgba(52, 152, 219, 0.2);
         }
 
-        .section h2 {
-            color: #444;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 10px;
+        .step-title {
+            font-size: 1.4em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        button {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+        .step-number {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
             color: white;
             border: none;
             padding: 12px 25px;
-            margin: 8px;
             border-radius: 25px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1em;
             font-weight: 600;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            margin: 5px;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
         }
 
-        button:hover {
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
         }
 
-        button:active {
+        .btn:active {
             transform: translateY(0);
         }
 
-        button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #219a52);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
         }
 
-        input, textarea, select {
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-control {
             width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: 2px solid #e0e0e0;
+            padding: 12px 15px;
+            border: 2px solid #ecf0f1;
             border-radius: 10px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #fafafa;
         }
 
-        input:focus, textarea:focus, select:focus {
+        .form-control:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.2);
         }
 
-        label {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        label input[type="checkbox"] {
-            width: auto;
-            margin-right: 10px;
-            transform: scale(1.2);
-        }
-
-        textarea {
+        textarea.form-control {
             resize: vertical;
-            min-height: 120px;
+            min-height: 100px;
+        }
+
+        .status-panel {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 5px solid #3498db;
+        }
+
+        .status-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .log-area {
+            background: #2c3e50;
+            color: #ecf0f1;
             font-family: 'Courier New', monospace;
-        }
-
-        .status {
-            padding: 15px;
-            margin: 15px 0;
+            padding: 20px;
             border-radius: 10px;
-            font-weight: 500;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 0.9em;
+            line-height: 1.4;
         }
 
-        .status.success {
-            background: linear-gradient(45deg, #4CAF50, #45a049);
-            color: white;
+        .success {
+            color: #27ae60;
+            font-weight: 600;
         }
 
-        .status.error {
-            background: linear-gradient(45deg, #f44336, #da190b);
-            color: white;
+        .error {
+            color: #e74c3c;
+            font-weight: 600;
         }
 
-        .status.info {
-            background: linear-gradient(45deg, #2196F3, #0b7dda);
-            color: white;
+        .warning {
+            color: #f39c12;
+            font-weight: 600;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-
-            .container {
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 2em;
-            }
+        .info {
+            color: #3498db;
+            font-weight: 600;
         }
 
         .key-display {
@@ -175,555 +216,369 @@
             border: 1px solid #dee2e6;
             border-radius: 8px;
             padding: 15px;
-            margin: 10px 0;
             font-family: 'Courier New', monospace;
-            font-size: 12px;
+            font-size: 0.85em;
             word-break: break-all;
-            max-height: 200px;
+            max-height: 150px;
             overflow-y: auto;
         }
 
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-left: 10px;
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #ecf0f1;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 10px 0;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .step-container {
+                grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>🔐 API 测试页面 - 加密通信</h1>
-
-    <!-- RSA 密钥生成部分 -->
-    <div class="section">
-        <h2>🔑 RSA 密钥管理</h2>
-        <button onclick="generateRSAKeys()">生成 RSA 密钥对</button>
-        <button onclick="exportPublicKey()">导出公钥</button>
-        <div id="rsaStatus"></div>
-        <div>
-            <h3>公钥 (PEM 格式):</h3>
-            <div id="publicKeyDisplay" class="key-display">请先生成 RSA 密钥对</div>
-        </div>
+    <div class="header">
+        <h1>🔐 加密通信API测试工具</h1>
+        <p>完整测试RSA密钥交换与AES-GCM加密通信流程</p>
     </div>
 
-    <!-- API 通信部分 -->
-    <div class="section">
-        <h2>🌐 API 通信测试</h2>
-        <div class="grid">
-            <div>
-                <h3>建立加密通道 (/rs)</h3>
-                <button onclick="establishChannel()">建立加密通道</button>
-                <div id="channelStatus"></div>
+    <div class="main-content">
+        <!-- 步骤1: 初始化RSA密钥 -->
+        <div class="step-container">
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">1</span>
+                    初始化RSA密钥
+                </div>
+                <p style="margin-bottom: 15px; color: #7f8c8d;">生成2048位RSA密钥对，用于后续的密钥交换</p>
+                <button class="btn" onclick="initRSA()">生成RSA密钥对</button>
+                <div id="rsaStatus" style="margin-top: 10px;"></div>
+                <div id="publicKeyDisplay" class="key-display" style="margin-top: 15px; display: none;"></div>
             </div>
-            <div>
-                <h3>API 请求 (/api)</h3>
-                <input type="text" id="messageInput" placeholder="请求消息" value="API request from test page">
-                <input type="text" id="operateInput" placeholder="输入操作内容" value="test_operation">
-                <select id="algorithmSelect">
-                    <option value="none">无压缩</option>
-                    <option value="gzip">GZIP</option>
-                    <option value="zlib">ZLIB</option>
-                    <option value="zstd">ZSTD</option>
-                    <option value="lzma">LZMA</option>
-                </select>
-                <label>
-                    <input type="checkbox" id="compressionCheck"> 启用压缩
-                </label>
-                <button onclick="sendAPIRequest()">发送 API 请求</button>
-                <div id="apiStatus"></div>
+
+            <!-- 步骤2: 密钥交换 -->
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">2</span>
+                    密钥交换 (/rs)
+                </div>
+                <p style="margin-bottom: 15px; color: #7f8c8d;">发送公钥到服务器，获取加密的AES密钥</p>
+                <button class="btn btn-success" onclick="keyExchange()" id="keyExchangeBtn" disabled>发起密钥交换</button>
+                <div id="keyExchangeStatus" style="margin-top: 10px;"></div>
             </div>
         </div>
-    </div>
 
-    <!-- 加密测试部分 -->
-    <div class="section">
-        <h2>🔐 加密/解密测试</h2>
-        <div class="grid">
-            <div>
-                <h3>AES-GCM 加密测试</h3>
-                <textarea id="plainText" placeholder="输入要加密的文本">Hello, World! 这是一个测试消息。</textarea>
-                <input type="text" id="aesKey" placeholder="AES 密钥 (16字符)" value="1234567890123456">
-                <button onclick="testAESEncryption()">AES 加密测试</button>
-                <div id="aesEncryptStatus"></div>
+        <!-- 步骤3: 准备测试数据 -->
+        <div class="step-container">
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">3</span>
+                    配置测试数据
+                </div>
+                <div class="form-group">
+                    <label for="operateSelect">操作类型:</label>
+                    <select class="form-control" id="operateSelect">
+                        <option value="super_add_user">super_add_user</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="testDataJson">测试参数 (JSON):</label>
+                    <textarea class="form-control" id="testDataJson" rows="6">{
+  "qq_number": 12345678,
+  "name": "测试用户",
+  "avatar_path": "/avatars/test.jpg",
+  "role": "user",
+  "password": "test123456",
+  "inviter": "admin"
+}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="compressionCheck"> 启用压缩
+                    </label>
+                </div>
+                <div class="form-group" id="algorithmGroup" style="display: none;">
+                    <label for="algorithmSelect">压缩算法:</label>
+                    <select class="form-control" id="algorithmSelect">
+                        <option value="gzip">gzip</option>
+                        <option value="zlib">zlib</option>
+                        <option value="zstd">zstd</option>
+                        <option value="lzma">lzma</option>
+                    </select>
+                </div>
             </div>
-            <div>
-                <h3>RSA 加密测试</h3>
-                <textarea id="rsaPlainText" placeholder="输入要用 RSA 加密的文本">Test RSA encryption</textarea>
-                <button onclick="testRSAEncryption()">RSA 加密测试</button>
-                <div id="rsaEncryptStatus"></div>
+
+            <!-- 步骤4: 发送加密请求 -->
+            <div class="step-card">
+                <div class="step-title">
+                    <span class="step-number">4</span>
+                    发送加密请求 (/api)
+                </div>
+                <p style="margin-bottom: 15px; color: #7f8c8d;">使用AES-GCM加密数据并发送到服务器</p>
+                <button class="btn btn-warning" onclick="sendEncryptedRequest()" id="sendRequestBtn" disabled>发送加密请求</button>
+                <div id="requestStatus" style="margin-top: 10px;"></div>
             </div>
         </div>
-    </div>
 
-    <!-- 响应日志 -->
-    <div class="section">
-        <h2>📋 响应日志</h2>
-        <textarea id="responseLog" readonly style="height: 300px;" placeholder="API 响应将显示在这里..."></textarea>
-        <button onclick="clearLog()">清空日志</button>
+        <!-- 状态面板 -->
+        <div class="status-panel">
+            <div class="status-title">📊 操作日志</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="log-area" id="logArea">
+                <div class="info">🚀 准备开始测试，请按步骤操作...</div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
-    // 包含提供的 RSA 和 Eec 类
-    /**
-     * RSA 加密类，提供基于 RSA-OAEP 的密钥生成、公钥导出、加密和解密功能。
-     */
-    class RSA {
-        constructor(name = "RSA-OAEP", hash = "SHA-256") {
-            this.name = name;
-            this.hash = hash;
-            this.key = null;
-        }
+    // 全局变量
+    let rsa = null;
+    let aesKey = null;
+    let sessionId = null;
+    let currentStep = 0;
 
-        async init() {
-            try {
-                this.key = await window.crypto.subtle.generateKey(
-                    {
-                        name: this.name,
-                        modulusLength: 2048,
-                        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-                        hash: this.hash,
-                    },
-                    true,
-                    ["encrypt", "decrypt"]
-                );
-            } catch (error) {
-                console.error("密钥生成失败:", error);
-                throw new Error("密钥生成失败");
-            }
-        }
+    // 初始化事件监听
+    document.getElementById('compressionCheck').addEventListener('change', function() {
+        const algorithmGroup = document.getElementById('algorithmGroup');
+        algorithmGroup.style.display = this.checked ? 'block' : 'none';
+    });
 
-        async getPublicKey_pem() {
-            try {
-                const spki = await window.crypto.subtle.exportKey("spki", this.key.publicKey);
-                const b64 = this._arrayBufferToBase64(spki);
-                const pem = b64.match(/.{1,64}/g).join('\n');
-                return `-----BEGIN PUBLIC KEY-----\n${pem}\n-----END PUBLIC KEY-----`;
-            } catch (error) {
-                console.error("导出公钥失败:", error);
-                throw new Error("导出公钥失败");
-            }
-        }
-
-        async encrypt(plainText, { PublicKey_pem = null, use_myPublicKey = false, output = 'base64' } = {}) {
-            try {
-                const publicKey = await this._resolvePublicKey(PublicKey_pem, use_myPublicKey);
-                const encoder = new TextEncoder();
-                const data = encoder.encode(plainText);
-
-                const encrypted = await window.crypto.subtle.encrypt({ name: this.name }, publicKey, data);
-                const byteArray = new Uint8Array(encrypted);
-
-                return output === 'hex'
-                    ? Array.from(byteArray).map(b => b.toString(16).padStart(2, '0')).join('')
-                    : this._arrayBufferToBase64(encrypted);
-            } catch (error) {
-                console.error("加密失败:", error);
-                throw new Error("加密失败");
-            }
-        }
-
-        async decrypt(cipherText, { input = 'base64' } = {}) {
-            try {
-                if (!this.key?.privateKey) throw new Error("私钥未初始化");
-
-                let byteArray;
-                if (input === 'hex') {
-                    byteArray = new Uint8Array(cipherText.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-                } else {
-                    const binaryString = atob(cipherText);
-                    byteArray = new Uint8Array([...binaryString].map(c => c.charCodeAt(0)));
-                }
-
-                const decrypted = await window.crypto.subtle.decrypt({ name: this.name }, this.key.privateKey, byteArray);
-                const decoder = new TextDecoder();
-                return decoder.decode(decrypted);
-            } catch (error) {
-                console.error("解密失败:", error);
-                throw new Error("解密失败");
-            }
-        }
-
-        async _resolvePublicKey(pem, useMyKey) {
-            if (useMyKey) {
-                if (!this.key?.publicKey) throw new Error("公钥未初始化");
-                return this.key.publicKey;
-            }
-
-            if (!pem) throw new Error("必须提供 PEM 格式公钥或启用 use_myPublicKey");
-
-            try {
-                const b64 = pem.replace(/-----BEGIN PUBLIC KEY-----|-----END PUBLIC KEY-----|\s+/g, '');
-                const binaryDer = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
-                return await window.crypto.subtle.importKey(
-                    'spki',
-                    binaryDer.buffer,
-                    { name: this.name, hash: this.hash },
-                    false,
-                    ['encrypt']
-                );
-            } catch (error) {
-                console.error("公钥导入失败:", error);
-                throw new Error("无效的公钥 PEM 格式");
-            }
-        }
-
-        _arrayBufferToBase64(buffer) {
-            return btoa(String.fromCharCode(...new Uint8Array(buffer)));
-        }
-    }
-
-    // Eec 类实现
-    class Eec {
-        static Hash = class {
-            static async sha256(data, encoding = 'utf-8') {
-                try {
-                    const encoder = new TextEncoder();
-                    const dataBuffer = encoder.encode(data);
-                    const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
-                    const hashArray = Array.from(new Uint8Array(hashBuffer));
-                    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-                } catch (error) {
-                    console.error('SHA256 error:', error);
-                    return '';
-                }
-            }
-        }
-
-        static Aes = class {
-            static Gcm = class {
-                static async encryptStr(data, key, encoding = 'utf-8') {
-                    try {
-                        const keyBytes = new TextEncoder().encode(key);
-                        if (![16, 24, 32].includes(keyBytes.length)) {
-                            throw new Error("Invalid AES key length. Must be 16, 24, or 32 bytes.");
-                        }
-
-                        const cryptoKey = await crypto.subtle.importKey(
-                            'raw',
-                            keyBytes,
-                            'AES-GCM',
-                            false,
-                            ['encrypt']
-                        );
-
-                        const iv = crypto.getRandomValues(new Uint8Array(12));
-                        const encoder = new TextEncoder();
-                        const dataBytes = encoder.encode(data);
-                        const encrypted = await crypto.subtle.encrypt(
-                            {
-                                name: 'AES-GCM',
-                                iv: iv
-                            },
-                            cryptoKey,
-                            dataBytes
-                        );
-
-                        const encryptedArray = new Uint8Array(encrypted);
-                        const ciphertext = encryptedArray.slice(0, -16);
-                        const tag = encryptedArray.slice(-16);
-
-                        return {
-                            iv: btoa(String.fromCharCode(...iv)),
-                            data: btoa(String.fromCharCode(...ciphertext)),
-                            tag: btoa(String.fromCharCode(...tag))
-                        };
-                    } catch (error) {
-                        console.error('AES-GCM encrypt string error:', error);
-                        return {};
-                    }
-                }
-
-                static async decryptStr(data, iv, tag, key, encoding = 'utf-8') {
-                    try {
-                        const keyBytes = new TextEncoder().encode(key);
-                        if (![16, 24, 32].includes(keyBytes.length)) {
-                            throw new Error("Invalid AES key length. Must be 16, 24, or 32 bytes.");
-                        }
-
-                        const cryptoKey = await crypto.subtle.importKey(
-                            'raw',
-                            keyBytes,
-                            'AES-GCM',
-                            false,
-                            ['decrypt']
-                        );
-
-                        const ivBytes = Uint8Array.from(atob(iv), c => c.charCodeAt(0));
-                        const ciphertextBytes = Uint8Array.from(atob(data), c => c.charCodeAt(0));
-                        const tagBytes = Uint8Array.from(atob(tag), c => c.charCodeAt(0));
-
-                        const encryptedData = new Uint8Array(ciphertextBytes.length + tagBytes.length);
-                        encryptedData.set(ciphertextBytes);
-                        encryptedData.set(tagBytes, ciphertextBytes.length);
-
-                        const decrypted = await crypto.subtle.decrypt(
-                            {
-                                name: 'AES-GCM',
-                                iv: ivBytes
-                            },
-                            cryptoKey,
-                            encryptedData
-                        );
-
-                        const decoder = new TextDecoder(encoding);
-                        return decoder.decode(decrypted);
-                    } catch (error) {
-                        console.error('AES-GCM decrypt string error:', error);
-                        return '';
-                    }
-                }
-            }
-        }
-    }
-
-    // 应用状态
-    let appState = {
-        rsa: null,
-        publicKeyPem: null,
-        sessionAESKey: null,
-        sessionId: null
-    };
-
-    // 工具函数
-    function showStatus(elementId, message, type = 'info') {
-        const element = document.getElementById(elementId);
-        element.innerHTML = `<div class="status ${type}">${message}</div>`;
-    }
-
-    function appendLog(message) {
-        const log = document.getElementById('responseLog');
+    // 日志函数
+    function log(message, type = 'info') {
+        const logArea = document.getElementById('logArea');
         const timestamp = new Date().toLocaleTimeString();
-        log.value += `[${timestamp}] ${message}\n`;
-        log.scrollTop = log.scrollHeight;
+        const logEntry = document.createElement('div');
+        logEntry.className = type;
+        logEntry.innerHTML = `[${timestamp}] ${message}`;
+        logArea.appendChild(logEntry);
+        logArea.scrollTop = logArea.scrollHeight;
     }
 
-    function clearLog() {
-        document.getElementById('responseLog').value = '';
+    // 更新进度条
+    function updateProgress(step) {
+        currentStep = step;
+        const progress = (step / 4) * 100;
+        document.getElementById('progressFill').style.width = progress + '%';
     }
 
-    // RSA 密钥生成
-    async function generateRSAKeys() {
+    // 初始化RSA密钥
+    async function initRSA() {
         try {
-            showStatus('rsaStatus', '正在生成 RSA 密钥对... <span class="loading"></span>', 'info');
+            log('🔄 正在生成RSA密钥对...', 'info');
 
-            appState.rsa = new RSA();
-            await appState.rsa.init();
-            appState.publicKeyPem = await appState.rsa.getPublicKey_pem();
+            rsa = new RSA();
+            await rsa.init();
 
-            document.getElementById('publicKeyDisplay').textContent = appState.publicKeyPem;
-            showStatus('rsaStatus', 'RSA 密钥对生成成功！', 'success');
-            appendLog('RSA 密钥对生成成功');
+            const publicKeyPem = await rsa.getPublicKey_pem();
+
+            document.getElementById('rsaStatus').innerHTML = '<span class="success">✅ RSA密钥生成成功</span>';
+            document.getElementById('publicKeyDisplay').style.display = 'block';
+            document.getElementById('publicKeyDisplay').textContent = publicKeyPem;
+            document.getElementById('keyExchangeBtn').disabled = false;
+
+            log('✅ RSA密钥对生成成功', 'success');
+            log(`📋 公钥长度: ${publicKeyPem.length} 字符`, 'info');
+            updateProgress(1);
+
         } catch (error) {
-            showStatus('rsaStatus', `RSA 密钥生成失败: ${error.message}`, 'error');
-            appendLog(`RSA 密钥生成失败: ${error.message}`);
+            log(`❌ RSA密钥生成失败: ${error.message}`, 'error');
+            document.getElementById('rsaStatus').innerHTML = '<span class="error">❌ 密钥生成失败</span>';
         }
     }
 
-    // 导出公钥
-    async function exportPublicKey() {
-        if (!appState.publicKeyPem) {
-            showStatus('rsaStatus', '请先生成 RSA 密钥对', 'error');
+    // 密钥交换
+    async function keyExchange() {
+        if (!rsa) {
+            log('❌ 请先生成RSA密钥', 'error');
             return;
         }
 
         try {
-            await navigator.clipboard.writeText(appState.publicKeyPem);
-            showStatus('rsaStatus', '公钥已复制到剪贴板', 'success');
-        } catch (error) {
-            showStatus('rsaStatus', '复制失败，请手动复制', 'error');
-        }
-    }
+            log('🔄 正在进行密钥交换...', 'info');
 
-    // 建立加密通道
-    async function establishChannel() {
-        if (!appState.publicKeyPem) {
-            showStatus('channelStatus', '请先生成 RSA 密钥对', 'error');
-            return;
-        }
-
-        try {
-            showStatus('channelStatus', '正在建立加密通道... <span class="loading"></span>', 'info');
-
+            const publicKeyPem = await rsa.getPublicKey_pem();
             const formData = new FormData();
-            formData.append('user_key_pub_pem', appState.publicKeyPem);
+            formData.append('user_key_pub_pem', publicKeyPem);
 
             const response = await fetch('/rs', {
                 method: 'POST',
-                body: formData,
-                credentials: 'include'
+                body: formData
             });
 
             const result = await response.json();
-            appendLog(`/rs 响应: ${JSON.stringify(result, null, 2)}`);
+            log(`📨 服务器响应: ${JSON.stringify(result)}`, 'info');
 
             if (result.code === 0) {
-                // 解密 AES 密钥
-                const encryptedKey = result.key;
-                appState.sessionAESKey = await appState.rsa.decrypt(encryptedKey, { input: 'hex' });
+                // 解密AES密钥
+                const encryptedKey = result.data.key;
+                aesKey = await rsa.decrypt(encryptedKey, { input: 'hex' });
 
-                showStatus('channelStatus', '加密通道建立成功！', 'success');
-                appendLog(`加密通道建立成功，AES密钥: ${appState.sessionAESKey}`);
+                // 获取session
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    const [name, value] = cookie.trim().split('=');
+                    if (name === 'session_id') {
+                        sessionId = value;
+                        break;
+                    }
+                }
+
+                document.getElementById('keyExchangeStatus').innerHTML = '<span class="success">✅ 密钥交换成功</span>';
+                document.getElementById('sendRequestBtn').disabled = false;
+
+                log('✅ 密钥交换成功', 'success');
+                log(`🔑 AES密钥: ${aesKey}`, 'info');
+                log(`🍪 Session ID: ${sessionId}`, 'info');
+                updateProgress(2);
+
             } else {
-                throw new Error(result.message || '建立通道失败');
+                throw new Error(result.message || '密钥交换失败');
             }
+
         } catch (error) {
-            showStatus('channelStatus', `建立通道失败: ${error.message}`, 'error');
-            appendLog(`建立通道失败: ${error.message}`);
+            log(`❌ 密钥交换失败: ${error.message}`, 'error');
+            document.getElementById('keyExchangeStatus').innerHTML = '<span class="error">❌ 密钥交换失败</span>';
         }
     }
 
-    // 发送 API 请求
-    async function sendAPIRequest() {
-        if (!appState.sessionAESKey) {
-            showStatus('apiStatus', '请先建立加密通道', 'error');
+    // 发送加密请求
+    async function sendEncryptedRequest() {
+        if (!aesKey || !sessionId) {
+            log('❌ 请先完成密钥交换', 'error');
             return;
         }
 
         try {
-            showStatus('apiStatus', '正在发送 API 请求... <span class="loading"></span>', 'info');
+            log('🔄 正在准备加密数据...', 'info');
+            updateProgress(3);
 
-            const message = document.getElementById('messageInput').value || 'API request from test page';
-            const operate = document.getElementById('operateInput').value || 'test_operation';
-            const algorithm = document.getElementById('algorithmSelect').value;
+            // 构建请求数据
+            const operate = document.getElementById('operateSelect').value;
+            const argsJson = document.getElementById('testDataJson').value;
             const compression = document.getElementById('compressionCheck').checked;
+            const algorithm = document.getElementById('algorithmSelect').value;
 
-            const requestData = { operate };
+            let args;
+            try {
+                args = JSON.parse(argsJson);
+            } catch (e) {
+                throw new Error('测试参数JSON格式错误');
+            }
 
-            // 使用当前 AES 密钥加密请求数据
-            const encryptedContent = await Eec.Aes.Gcm.encryptStr(JSON.stringify(requestData), appState.sessionAESKey);
+            const workData = {
+                operate: operate,
+                args: args
+            };
 
-            // 根据 ReqData1 模型构建正确的载荷结构
+            const workDataJson = JSON.stringify(workData);
+            log(`📋 工作数据: ${workDataJson}`, 'info');
+
+            // 根据是否压缩选择处理方式
+            let encryptedContent;
+            if (!compression) {
+                // 直接加密字符串
+                encryptedContent = await Eec.Aes.Gcm.encryptStr(workDataJson, aesKey);
+            } else {
+                // 先压缩再加密
+                log(`🗜️ 使用 ${algorithm} 压缩算法`, 'info');
+
+                // 注意：这里仅做演示，实际的压缩需要在服务端实现
+                // 浏览器端通常使用CompressionStream API，但支持有限
+                const encoder = new TextEncoder();
+                const data = encoder.encode(workDataJson);
+                encryptedContent = await Eec.Aes.Gcm.encryptBytes(data, aesKey);
+            }
+
+            // 构建请求负载
             const payload = {
-                message: message,
+                message: "encrypted_request",
                 compression: compression,
                 algorithm: algorithm,
                 content: encryptedContent
             };
 
-            appendLog(`发送载荷: ${JSON.stringify(payload, null, 2)}`);
+            // 计算session_user头
+            const sessionUser = await Eec.Hash.sha256(aesKey);
+
+            log('🔐 正在发送加密请求...', 'info');
 
             const response = await fetch('/api', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'session_id': sessionId,
+                    'session_user': sessionUser
                 },
-                body: JSON.stringify(payload),
-                credentials: 'include'
+                body: JSON.stringify(payload)
             });
 
             const result = await response.json();
-            appendLog(`/api 响应: ${JSON.stringify(result, null, 2)}`);
+            log(`📨 服务器响应: ${JSON.stringify(result, null, 2)}`, 'info');
 
             if (result.code === 0) {
                 // 解密响应数据
-                const decryptedResponse = await Eec.Aes.Gcm.decryptStr(
-                    result.data.data,
-                    result.data.iv,
-                    result.data.tag,
-                    appState.sessionAESKey
-                );
+                if (result.data && result.data.data) {
+                    const decryptedResponse = await Eec.Aes.Gcm.decryptStr(
+                        result.data.data,
+                        result.data.iv,
+                        result.data.tag,
+                        aesKey
+                    );
 
-                const responseData = JSON.parse(decryptedResponse);
-                appState.sessionAESKey = responseData.key; // 更新 AES 密钥
+                    const responseData = JSON.parse(decryptedResponse);
 
-                showStatus('apiStatus', `API 请求成功！操作: ${responseData.data.operate}`, 'success');
-                appendLog(`解密后的响应: ${JSON.stringify(responseData, null, 2)}`);
-                appendLog(`AES密钥已更新: ${appState.sessionAESKey}`);
+                    document.getElementById('requestStatus').innerHTML = '<span class="success">✅ 请求处理成功</span>';
+                    log('✅ 请求处理成功', 'success');
+                    log(`📋 解密后的响应: ${JSON.stringify(responseData, null, 2)}`, 'success');
+
+                    // 更新AES密钥
+                    if (responseData.key) {
+                        aesKey = responseData.key;
+                        log('🔄 AES密钥已更新', 'info');
+                    }
+
+                    updateProgress(4);
+                }
             } else {
-                throw new Error(result.message || 'API 请求失败');
+                throw new Error(result.message || '请求处理失败');
             }
+
         } catch (error) {
-            showStatus('apiStatus', `API 请求失败: ${error.message}`, 'error');
-            appendLog(`API 请求失败: ${error.message}`);
-        }
-    }
-
-    // AES 加密测试
-    async function testAESEncryption() {
-        try {
-            const plainText = document.getElementById('plainText').value;
-            const aesKey = document.getElementById('aesKey').value;
-
-            if (!plainText || !aesKey) {
-                showStatus('aesEncryptStatus', '请输入明文和密钥', 'error');
-                return;
-            }
-
-            showStatus('aesEncryptStatus', '正在进行 AES 加密测试... <span class="loading"></span>', 'info');
-
-            // 加密
-            const encrypted = await Eec.Aes.Gcm.encryptStr(plainText, aesKey);
-            appendLog(`AES加密结果: ${JSON.stringify(encrypted, null, 2)}`);
-
-            // 解密验证
-            const decrypted = await Eec.Aes.Gcm.decryptStr(encrypted.data, encrypted.iv, encrypted.tag, aesKey);
-
-            if (decrypted === plainText) {
-                showStatus('aesEncryptStatus', 'AES 加密/解密测试成功！', 'success');
-                appendLog(`AES解密结果: ${decrypted}`);
-            } else {
-                throw new Error('解密结果与原文不匹配');
-            }
-        } catch (error) {
-            showStatus('aesEncryptStatus', `AES 测试失败: ${error.message}`, 'error');
-            appendLog(`AES 测试失败: ${error.message}`);
-        }
-    }
-
-    // RSA 加密测试
-    async function testRSAEncryption() {
-        if (!appState.rsa) {
-            showStatus('rsaEncryptStatus', '请先生成 RSA 密钥对', 'error');
-            return;
-        }
-
-        try {
-            const plainText = document.getElementById('rsaPlainText').value;
-            if (!plainText) {
-                showStatus('rsaEncryptStatus', '请输入要加密的文本', 'error');
-                return;
-            }
-
-            showStatus('rsaEncryptStatus', '正在进行 RSA 加密测试... <span class="loading"></span>', 'info');
-
-            // 使用自己的公钥加密
-            const encrypted = await appState.rsa.encrypt(plainText, { use_myPublicKey: true });
-            appendLog(`RSA加密结果: ${encrypted}`);
-
-            // 使用私钥解密
-            const decrypted = await appState.rsa.decrypt(encrypted);
-
-            if (decrypted === plainText) {
-                showStatus('rsaEncryptStatus', 'RSA 加密/解密测试成功！', 'success');
-                appendLog(`RSA解密结果: ${decrypted}`);
-            } else {
-                throw new Error('解密结果与原文不匹配');
-            }
-        } catch (error) {
-            showStatus('rsaEncryptStatus', `RSA 测试失败: ${error.message}`, 'error');
-            appendLog(`RSA 测试失败: ${error.message}`);
+            log(`❌ 发送请求失败: ${error.message}`, 'error');
+            document.getElementById('requestStatus').innerHTML = '<span class="error">❌ 请求失败</span>';
         }
     }
 
     // 页面加载完成后的初始化
     document.addEventListener('DOMContentLoaded', function() {
-        appendLog('API 测试页面加载完成');
-        appendLog('请按以下步骤测试：');
-        appendLog('1. 生成 RSA 密钥对');
-        appendLog('2. 建立加密通道 (/rs)');
-        appendLog('3. 发送 API 请求 (/api)');
-        appendLog('4. 可选：测试加密/解密功能');
+        log('🎯 页面加载完成，准备开始测试', 'info');
+        log('📝 请按照步骤1-4的顺序进行操作', 'info');
     });
 </script>
 </body>

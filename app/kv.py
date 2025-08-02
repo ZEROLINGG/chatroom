@@ -181,7 +181,6 @@ class Kv:
     async def get(self, key: str, default: Any = None) -> Any:
         """
         根据键获取值。
-        
         :param key: 要查找的键。
         :param default: 如果键不存在时返回的默认值。
         :return: 查找到的值或默认值。
